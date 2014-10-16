@@ -1,0 +1,16 @@
+{
+    "name": "voceconnect/voce-group-keys",
+    "description": "Create string keys for caching based off of specified groups, allowing clearing keys based on the groups to which they belong",
+    "keywords": ["wordpress", "cache keys"],
+    "license": "GPLv2+",
+    "authors": [
+        {
+            "name": "Gary Smirny",
+            "email": "gary@voceconnect.com"
+        }
+    ],
+    "type": "library",
+    "autoload": {
+        "files": ["voce-group-keys.php"]
+    }
+}
