@@ -2,7 +2,7 @@
 /*
   Plugin Name: Voce Group Keys
   Description: Create string keys for caching based off of specified groups, allowing clearing keys based on the groups to which they belong
-  Version: 1.0.0
+  Version: 1.0.1
   Author: banderon
   License: GPLv2 or later
  */
@@ -48,7 +48,8 @@ class Voce_Group_Keys {
 		$new_groups = array_diff( $cache_groups, array_keys( self::$cache_groups ) );
 		if ( $new_groups ) {
 			foreach ( $new_groups as $new_group ) {
-				self::$cache_groups[$new_group] = time();
+				self::$cache_groups[ $new_group ] = microtime( true );
+				time_nanosleep( 0, 1000 );
 			}
 			ksort( self::$cache_groups );
 			set_transient( self::CACHE_GROUP_KEY, self::$cache_groups );

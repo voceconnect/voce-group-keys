@@ -4,7 +4,7 @@ Contributors: banderon
 Tags: cache, group, keys  
 Requires at least: 2.8  
 Tested up to: 4.0  
-Stable tag: 1.0.0  
+Stable tag: 1.0.1
 License: GPLv2 or later  
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 
@@ -86,5 +86,8 @@ voce_clear_all_group_cache();
 ```
 
 ## Version History
+**1.0.1**
+*Bug fix: added slight delay when saving new keys to avoid collisions
+
 **1.0.0**
 *Initial version
