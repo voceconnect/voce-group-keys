@@ -2,7 +2,7 @@
 /*
   Plugin Name: Voce Group Keys
   Description: Create string keys for caching based off of specified groups, allowing clearing keys based on the groups to which they belong
-  Version: 1.0.1
+  Version: 1.1
   Author: banderon
   License: GPLv2 or later
  */
@@ -16,7 +16,6 @@ class Voce_Group_Keys {
 	private static $cache_groups;
 	private static $instance;
 
-
 	public static function GetInstance() {
 		$class = __CLASS__;
 		if ( !isset( self::$instance ) ) {
@@ -27,17 +26,21 @@ class Voce_Group_Keys {
 	}
 
 	public function __construct() {
-
 		self::prep_cache_groups();
 	}
 
 	private static function prep_cache_groups() {
-		if( false == ( self::$cache_groups = get_transient( self::CACHE_GROUP_KEY ) ) ) {
+		if ( false == ( self::$cache_groups = get_transient( self::CACHE_GROUP_KEY ) ) ) {
 			self::$cache_groups = array();
 		}
 	}
 
-	public static function get_cache_key( $key, $cache_groups = array() ) {
+	private static function old_ver() {
+		global $wp_version;
+		return ! $wp_version || version_compare( $wp_version, '4.4', '<' );
+	}
+
+	public static function get_cache_key( $key, $cache_groups = array(), $limit_length = true ) {
 		$cache_groups = (array)$cache_groups;
 
 		$cache_groups[] = 'voce-group-keys-universal-group';
@@ -56,9 +59,9 @@ class Voce_Group_Keys {
 		}
 
 		// create hash chunk from incrementers for each group
-		$cache_groups_hash = substr( md5( implode( array_intersect_key( self::$cache_groups, array_flip( $cache_groups ) ) ) ), 0, 10 );
+		$cache_groups_hash = sprintf( '%s_%s', $key, md5( implode( array_intersect_key( self::$cache_groups, array_flip( $cache_groups ) ) ) ) );
 
-		return sprintf( '%s_%s', $key, $cache_groups_hash );
+		return $limit_length ? substr( $cache_groups_hash, 0, self::old_ver() ? 40 : 165 ) : $cache_groups_hash;
 	}
 
 	public static function clear_all_cache() {
@@ -72,7 +75,6 @@ class Voce_Group_Keys {
 		}
 		set_transient( self::CACHE_GROUP_KEY, self::$cache_groups );
 	}
-
 }
 
 // Generate a cache key based on $key and $groups
